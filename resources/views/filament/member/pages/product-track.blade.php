@@ -25,20 +25,21 @@
                 <ol class="relative border-s border-primary/80 pl-6">
                     <!-- item -->
 
-                    @foreach($track->productTrackPaths as $path)
+                    @foreach($track->productTrackCourses as $course)
                         <li class="mb-10 ms-4">
                             <span class="absolute -start-2.5 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary ring-2 ring-primary/60"></span>
                             <div class="flex items-start gap-4">
                                 <div class="h-14 w-14 shrink-0 rounded-full bg-primary/70 ring-1 ring-white/10 overflow-hidden">
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::temporaryUrl($path->path->cover, now()->addMinute()) }}" class="h-full w-full object-cover">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::temporaryUrl($course->course->cover, now()->addMinute()) }}" class="h-full w-full object-cover">
                                 </div>
                                 <div>
-                                    <a href="{{ route('filament.member.pages.produto.{product}.class-room.{path}.{slug}', [
+                                    <a href="{{ route('filament.member.pages.produto.{product}.class-room.{track}.{course}.{slug}', [
                                             'product' => $product->id,
-                                            'path' => $path->path->id,
-                                            'slug' => $path->path->slug
-                            ]) }}" class="text-lg font-semibold hover:underline">{{ $path->path->name }}</a>
-                                    <p class="text-sm text-primary">{{ $path->path->description }}</p>
+                                            'track' => $track->track_id,
+                                            'course' => $course->course->id,
+                                            'slug' => $course->course->slug
+                            ]) }}" class="text-lg font-semibold hover:underline">{{ $course->course->name }}</a>
+                                    <p class="text-sm text-primary">{{ $course->course->description }}</p>
                                 </div>
                             </div>
                         </li>

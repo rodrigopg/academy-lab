@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Paths\RelationManagers;
+namespace App\Filament\Admin\Resources\Courses\RelationManagers;
 
 use App\Filament\Admin\Resources\Modules\Schemas\ModuleForm;
 use Filament\Actions\AssociateAction;

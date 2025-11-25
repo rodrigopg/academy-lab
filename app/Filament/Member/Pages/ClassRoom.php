@@ -2,13 +2,12 @@
 
 namespace App\Filament\Member\Pages;
 
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonMaterial;
-use App\Models\Path;
 use App\Models\Product;
+use App\Models\Track;
 use Filament\Pages\Page;
-use Filament\Panel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -17,14 +16,15 @@ class ClassRoom extends Page
 {
     protected string $view = 'filament.member.pages.class-room';
     protected static bool $shouldRegisterNavigation = false;
-    protected static ?string $slug = 'produto/{product}/class-room/{path}/{slug}';
+    protected static ?string $slug = 'produto/{product}/class-room/{track}/{course}/{slug}';
     protected static ?string $title = '';
     protected static string $layout = 'filament-panels::components.layout.base';
 
     public Product $product;
-    public Path $path;
+    public Track $track;
+    public Course $course;
     public Lesson $activelesson;
-    public int $product_track_path_id;
+    public int $product_track_course_id;
 
     #[Url]
     public $lesson_id;
@@ -32,19 +32,20 @@ class ClassRoom extends Page
     public static function canAccess(): bool
     {
         $product = request()->route('product');
-        $path = request()->route('path');
+        $course = request()->route('course');
 
-        return auth()->user()->can('accessClassRoom', [$product,$path]);
+        return auth()->user()->can('accessClassRoom', [$product, $course]);
     }
 
-    public function mount(Product $product, Path $path): void
+    public function mount(Product $product, Track $track, Course $course): void
     {
         $this->product = $product;
-        $this->path = $path->load([
+        $this->track = $track;
+        $this->course = $course->load([
             'modules.lessons',
-            'modules.lessons.userLessonStatus' => fn($query) => $query->where('product_track_path_id', $this->path->getProductTrackPathId($this->product->id))
+            'modules.lessons.userLessonStatus' => fn($query) => $query->where('product_track_course_id', $this->course->getProductTrackCourseId($this->product->id, $this->track->id))
         ]);
-        $this->product_track_path_id = $this->path->getProductTrackPathId($this->product->id);
+        $this->product_track_course_id = $this->course->getProductTrackCourseId($this->product->id, $this->track->id);
 
 
         $this->nextLesson($this->lesson_id);
@@ -52,7 +53,7 @@ class ClassRoom extends Page
 
     public function nextLesson($targetLessonId = null)
     {
-        $lessonsOrdered = $this->path->modules
+        $lessonsOrdered = $this->course->modules
             ->flatMap(fn ($m) => collect($m['lessons'])->sortBy('position'));
 
 
@@ -93,13 +94,13 @@ class ClassRoom extends Page
     {
         if ($this->activelesson->userLessonStatus) {
             $this->activelesson->userLessonStatus()
-                ->where('product_track_path_id', $this->product_track_path_id)
+                ->where('product_track_course_id', $this->product_track_course_id)
                 ->update(['completed_at' => now()]);
         }
 
         $this->activelesson->userLessonStatus()->firstOrCreate([
             'user_id' => auth()->id(),
-            'product_track_path_id' => $this->product_track_path_id,
+            'product_track_course_id' => $this->product_track_course_id,
             'lesson_id' => $this->activelesson->id
         ], [
             'completed_at' => now(),
@@ -119,7 +120,7 @@ class ClassRoom extends Page
     {
         $this->activelesson->userLessonStatus()->firstOrCreate([
             'user_id' => auth()->id(),
-            'product_track_path_id' => $this->product_track_path_id,
+            'product_track_course_id' => $this->product_track_course_id,
             'lesson_id' => $this->activelesson->id
         ], [
             'started_at' => now(),

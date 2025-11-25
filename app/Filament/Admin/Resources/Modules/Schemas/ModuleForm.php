@@ -18,8 +18,8 @@ class ModuleForm
         return $schema
             ->components([
                 Section::make([
-                    Select::make('path_id')
-                        ->relationship('path', 'name')
+                    Select::make('course_id')
+                        ->relationship('course', 'name')
                         ->default(fn (EditModule|CreateModule|RelationManager $livewire) => $livewire instanceof RelationManager
                             ? $livewire->getOwnerRecord()->getKey()
                             : null)

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lesson_id')->constrained('lessons');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('product_track_path_id')->nullable()->constrained('product_track_path');
+            $table->foreignId('product_track_course_id')->nullable()->constrained('product_track_course');
             $table->tinyInteger('stars')->unsigned()->comment('Rating from 1 to 5');
             $table->text('comment')->nullable();
             $table->timestamps();

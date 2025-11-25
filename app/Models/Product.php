@@ -55,13 +55,17 @@ class Product extends Model
         return $this->hasMany(ProductTrack::class);
     }
 
+    public function productTrackCourses(): HasMany
+    {
+        return $this->hasMany(ProductTrackCourse::class);
+    }
+
     public function getTotalDurationAttribute()
     {
-        $totalSeconds = DB::table('product_track')
-            ->join('product_track_path', 'product_track.id', '=', 'product_track_path.product_track_id')
-            ->join('paths', 'product_track_path.path_id', '=', 'paths.id')
-            ->where('product_track.product_id', $this->id)
-            ->sum('paths.duration');
+        $totalSeconds = DB::table('product_track_course as ptc')
+            ->join('courses', 'ptc.course_id', '=', 'courses.id')
+            ->where('ptc.product_id', $this->id)
+            ->sum('courses.duration');
 
         $hours = floor($totalSeconds / 3600);
         $minutes = floor(($totalSeconds % 3600) / 60);

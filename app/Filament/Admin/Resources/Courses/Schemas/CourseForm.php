@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Paths\Schemas;
+namespace App\Filament\Admin\Resources\Courses\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -9,7 +9,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
-class PathForm
+class CourseForm
 {
     public static function configure(Schema $schema): Schema
     {

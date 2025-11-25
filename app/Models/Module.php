@@ -13,7 +13,7 @@ class Module extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'path_id',
+        'course_id',
         'name',
         'description',
         'position',
@@ -28,11 +28,11 @@ class Module extends Model
     }
 
     /**
-     * Get the path that owns this module.
+     * Get the course that owns this module.
      */
-    public function path(): BelongsTo
+    public function course(): BelongsTo
     {
-        return $this->belongsTo(Path::class);
+        return $this->belongsTo(Course::class);
     }
 
     /**

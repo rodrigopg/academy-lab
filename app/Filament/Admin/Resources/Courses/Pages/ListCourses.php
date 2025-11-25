@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Paths\Pages;
+namespace App\Filament\Admin\Resources\Courses\Pages;
 
-use App\Filament\Admin\Resources\Paths\PathResource;
+use App\Filament\Admin\Resources\Courses\CourseResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListPaths extends ListRecords
+class ListCourses extends ListRecords
 {
-    protected static string $resource = PathResource::class;
+    protected static string $resource = CourseResource::class;
 
     protected function getHeaderActions(): array
     {
