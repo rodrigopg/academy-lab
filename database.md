@@ -137,7 +137,7 @@
 | created_at | timestamp |  |
 | updated_at | timestamp |  |
 
-### paths
+### courses
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | bigint | Primary key |
@@ -154,7 +154,7 @@
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | bigint | Primary key |
-| path_id | foreignId | References `paths.id` |
+| course_id | foreignId | References `courses.id` |
 | name | string |  |
 | description | text |  |
 | position | integer |  |
@@ -215,16 +215,30 @@
 | created_at | timestamp |  |
 | updated_at | timestamp |  |
 
-### product_track_path
+### track_course
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | bigint | Primary key |
-| product_track_id | foreignId | References `product_track.id`, indexed with `position` |
-| path_id | foreignId | References `paths.id` |
+| track_id | foreignId | References `tracks.id` |
+| course_id | foreignId | References `courses.id` |
 | position | integer |  |
 | visibility | enum | `visible` (default) or `hidden` |
 | created_at | timestamp |  |
 | updated_at | timestamp |  |
+
+### product_track_course
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | bigint | Primary key |
+| product_id | foreignId | References `products.id`, indexed with `position` |
+| track_id | foreignId | References `tracks.id` |
+| course_id | foreignId | References `courses.id` |
+| position | integer |  |
+| visibility | enum | `visible` (default) or `hidden` |
+| created_at | timestamp |  |
+| updated_at | timestamp |  |
+
+Content hierarchy: `products → product_track → tracks → track_course → courses → modules → lessons`.
 
 ### product_user
 | Column | Type | Notes |
@@ -244,7 +258,7 @@
 | id | bigint | Primary key |
 | lesson_id | foreignId | References `lessons.id`, unique with `user_id` |
 | user_id | foreignId | References `users.id`, unique with `lesson_id` |
-| product_track_path_id | foreignId | Nullable, references `product_track_path.id` |
+| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
 | started_at | timestamp | Nullable |
 | completed_at | timestamp | Nullable |
 | created_at | timestamp |  |
@@ -256,7 +270,7 @@
 | id | bigint | Primary key |
 | lesson_id | foreignId | References `lessons.id`, unique with `user_id` |
 | user_id | foreignId | References `users.id`, unique with `lesson_id` |
-| product_track_path_id | foreignId | Nullable, references `product_track_path.id` |
+| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
 | stars | unsignedTinyInteger | 1–5 rating |
 | comment | text | Nullable |
 | created_at | timestamp |  |
@@ -269,7 +283,7 @@
 | lesson_id | foreignId | References `lessons.id` |
 | user_id | foreignId | References `users.id` |
 | parent_id | foreignId | Nullable self-reference to `comments.id` |
-| product_track_path_id | foreignId | Nullable, references `product_track_path.id` |
+| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
 | content | text |  |
 | status | enum | `pending` (default), `approved`, `rejected` |
 | read_at | timestamp | Nullable |
