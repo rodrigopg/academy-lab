@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Paths\Pages;
+namespace App\Filament\Admin\Resources\Courses\Pages;
 
-use App\Filament\Admin\Resources\Paths\PathResource;
+use App\Filament\Admin\Resources\Courses\CourseResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditPath extends EditRecord
+class EditCourse extends EditRecord
 {
-    protected static string $resource = PathResource::class;
+    protected static string $resource = CourseResource::class;
 
     protected function getHeaderActions(): array
     {

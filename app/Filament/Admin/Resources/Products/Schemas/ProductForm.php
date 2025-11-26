@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources\Products\Schemas;
 
-use App\Filament\Admin\Resources\Paths\Schemas\PathForm;
+use App\Filament\Admin\Resources\Courses\Schemas\CourseForm;
 use App\Filament\Admin\Resources\Tracks\Schemas\TrackForm;
-use App\Models\Path;
+use App\Models\Course;
 use App\Models\Track;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -71,21 +71,21 @@ class ProductForm
                                             ->live()
                                             ->required()
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
-                                        Repeater::make('productTrackPaths')
-                                            ->label('Paths')
-                                            ->relationship('productTrackPaths')
+                                        Repeater::make('productTrackCourses')
+                                            ->label('Cursos')
+                                            ->relationship('productTrackCourses')
                                             ->itemLabel(fn ($state): string =>
-                                                Path::query()->whereKey($state['path_id'])->value('name') ?? 'Selecione o path'
+                                                Course::query()->whereKey($state['course_id'])->value('name') ?? 'Selecione o curso'
                                             )
                                             ->table([
                                                 Repeater\TableColumn::make('Nome'),
                                             ])
                                             ->schema([
-                                                Select::make('path_id')
+                                                Select::make('course_id')
                                                     ->searchable()
                                                     ->preload()
-                                                    ->relationship('path', 'name')
-                                                    ->createOptionForm(fn ($schema) => PathForm::configure($schema))
+                                                    ->relationship('course', 'name')
+                                                    ->createOptionForm(fn ($schema) => CourseForm::configure($schema))
                                                     ->live()
                                                     ->required()
                                                     ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
@@ -93,15 +93,15 @@ class ProductForm
                                             ->compact()
                                             ->hidden(fn (Get $get) => blank($get('track_id')))
                                             ->orderColumn('position')
-                                            ->addActionLabel('Adicionar novo Path')
+                                            ->addActionLabel('Adicionar novo Curso')
                                             ->extraItemActions([
-                                                Action::make('configure_path')
+                                                Action::make('configure_course')
                                                     ->icon(Heroicon::OutlinedLink)
                                                     ->action(function (array $arguments, Repeater $component) {
                                                         if (str_contains($arguments['item'], 'record')) {
                                                             $state = $component->getState();
                                                             $state = $state[$arguments['item']];
-                                                            return redirect()->route('filament.admin.resources.paths.edit', $state['path_id']);
+                                                            return redirect()->route('filament.admin.resources.courses.edit', $state['course_id']);
                                                         }
                                                     })
                                             ])

@@ -15,7 +15,7 @@ class LessonStatus extends Model
         'user_id',
         'completed_at',
         'started_at',
-        'product_track_path_id'
+        'product_track_course_id'
     ];
 
     protected function casts(): array

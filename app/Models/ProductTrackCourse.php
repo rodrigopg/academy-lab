@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProductTrack extends Model
+class ProductTrackCourse extends Model
 {
     use HasFactory;
 
-    protected $table = 'product_track';
+    protected $table = 'product_track_course';
 
     protected $fillable = [
         'product_id',
         'track_id',
+        'course_id',
         'position',
         'visibility',
     ];
@@ -27,26 +27,18 @@ class ProductTrack extends Model
         ];
     }
 
-    /**
-     * Get the product that owns this product track.
-     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    /**
-     * Get the track that belongs to this product track.
-     */
     public function track(): BelongsTo
     {
         return $this->belongsTo(Track::class);
     }
 
-    public function productTrackCourses(): HasMany
+    public function course(): BelongsTo
     {
-        return $this->hasMany(ProductTrackCourse::class, 'track_id', 'track_id')
-            ->where('product_id', $this->product_id)
-            ->orderBy('position');
+        return $this->belongsTo(Course::class);
     }
 }

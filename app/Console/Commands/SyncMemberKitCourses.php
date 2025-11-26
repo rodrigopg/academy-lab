@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonMaterial;
 use App\Models\Module;
-use App\Models\Path;
 use App\Models\ProductTrack;
+use App\Models\ProductTrackCourse;
+use App\Models\TrackCourse;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -77,14 +79,14 @@ class SyncMemberKitCourses extends Command
             if (!empty($course['image_url'])) {
                 $thumb = Http::retry(3, 300)->get($course['image_url']);
                 if ($thumb->successful()) {
-                    $thumb_path = "paths/thumb_" . Str::uuid() . ".jpg";
+                    $thumb_path = "courses/thumb_" . Str::uuid() . ".jpg";
                     Storage::put($thumb_path, $thumb->body());
                 }
             }
 
             $path_duration = 0;
 
-            $path = Path::create([
+            $courseModel = Course::create([
                 'name'        => $course['name'],
                 'description' => $course['description'],
                 'slug'        => Str::slug($course['name']),
@@ -97,9 +99,30 @@ class SyncMemberKitCourses extends Command
                 ->toArray();
 
             if ($trackIds) {
-                $path->productTracks()->syncWithPivotValues($trackIds, [
-                    'position' => $course['position'],
-                ]);
+                foreach ($productTracks->whereIn('id', $trackIds) as $productTrack) {
+                    TrackCourse::firstOrCreate(
+                        [
+                            'track_id' => $productTrack->track_id,
+                            'course_id' => $courseModel->id,
+                        ],
+                        [
+                            'position' => $course['position'],
+                            'visibility' => 'visible',
+                        ]
+                    );
+
+                    ProductTrackCourse::updateOrCreate(
+                        [
+                            'product_id' => $productTrack->product_id,
+                            'track_id' => $productTrack->track_id,
+                            'course_id' => $courseModel->id,
+                        ],
+                        [
+                            'position' => $course['position'],
+                            'visibility' => 'visible',
+                        ]
+                    );
+                }
             }
 
             // Detalhe do curso (seções/lessons)
@@ -121,7 +144,7 @@ class SyncMemberKitCourses extends Command
 
             foreach ($course_member['sections'] as $section) {
                 $module = Module::create([
-                    'path_id'     => $path->id,
+                    'course_id'     => $courseModel->id,
                     'name'        => $section['name'],
                     'description' => $section['description'],
                     'position'    => $section['position'],

@@ -18,7 +18,7 @@ class Comment extends Model
         'content',
         'status',
         'read_at',
-        'product_track_path_id',
+        'product_track_course_id',
     ];
 
     protected function casts(): array

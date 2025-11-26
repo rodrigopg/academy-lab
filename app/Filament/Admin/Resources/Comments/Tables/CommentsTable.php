@@ -65,8 +65,8 @@ class CommentsTable
                                         ->columnSpan(1),
                                 ])->columns(3)->columnSpanFull(),
                                 Section::make([
-                                    TextEntry::make('lesson.module.path.name')
-                                        ->label('Path'),
+                                    TextEntry::make('lesson.module.course.name')
+                                        ->label('Course'),
                                     TextEntry::make('lesson.module.name')
                                         ->label('Modulo'),
                                     TextEntry::make('lesson.name')

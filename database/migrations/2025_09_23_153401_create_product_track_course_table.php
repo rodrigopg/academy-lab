@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('product_track_course', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id')->constrained('products')->index();
+            $table->foreignId('track_id')->constrained('tracks');
             $table->foreignId('course_id')->constrained('courses');
-            $table->string('name');
-            $table->text('description');
             $table->integer('position');
-            $table->integer('duration')->nullable();
-            $table->softDeletes();
+            $table->enum('visibility', ['visible', 'hidden'])->default('visible');
             $table->timestamps();
+
+            $table->index(['product_id', 'track_id', 'course_id']);
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('product_track_course');
     }
 };

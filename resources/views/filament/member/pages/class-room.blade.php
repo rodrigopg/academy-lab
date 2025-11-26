@@ -40,7 +40,7 @@
             <div class="p-3 flex flex-col gap-y-6" x-data="{ openModules: {} }"
                 x-init="openModules[{{ $activelesson->module_id }}] = !openModules[{{ $activelesson->module_id }}]"
             >
-                @foreach($path->modules as $module)
+                @foreach($course->modules as $module)
                     <div class="flex flex-col rounded-lg  bg-neutral-1000/30">
                         <!-- Cabeçalho do módulo -->
                         <button
@@ -117,7 +117,7 @@
             <header class="border-b border-neutral-1000 px-4 py-3">
                 <div class="flex items-center justify-between">
                     <h1 id="currentLessonTitle" class="text-lg font-semibold text-white-900">
-                        {{ $path->name }}
+                        {{ $course->name }}
                     </h1>
                 </div>
             </header>

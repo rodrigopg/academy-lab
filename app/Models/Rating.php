@@ -15,7 +15,7 @@ class Rating extends Model
         'user_id',
         'stars',
         'comment',
-        'product_track_path_id'
+        'product_track_course_id'
     ];
 
     protected function casts(): array
