@@ -33,8 +33,7 @@ class ProductPolicy
     {
         return DB::table('product_user as pu')
             ->join('products as p', 'p.id', '=', 'pu.product_id')
-            ->join('product_track as pt', 'pt.product_id', '=', 'p.id')
-            ->join('product_track_course as ptc', 'ptc.product_track_id', '=', 'pt.id')
+            ->join('product_course as pc', 'pc.product_id', '=', 'p.id')
             ->where('pu.user_id', $user->id)
             ->where('pu.product_id', $product->id)
             ->where('pu.status', 'active')
@@ -42,7 +41,7 @@ class ProductPolicy
                 $q->whereNull('pu.expires_at')
                     ->orWhere('pu.expires_at', '>', now());
             })
-            ->where('ptc.course_id', $course->id)
+            ->where('pc.course_id', $course->id)
             ->exists();
 
     }

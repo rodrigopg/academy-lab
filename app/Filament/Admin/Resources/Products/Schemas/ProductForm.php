@@ -118,9 +118,8 @@ class ProductForm
 //                                                        }
 //                                                    })
 //                                            ])
-                            ])
-                    ])->columns(3),
-            ])
+                            ])->columns(1),
+                    ])
             ])->columns(1);
     }
 }

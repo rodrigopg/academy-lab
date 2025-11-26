@@ -43,10 +43,12 @@ class ProductTrack extends Model
         return $this->belongsTo(Track::class);
     }
 
-    public function productTrackCourses(): HasMany
+    /**
+     * Get the courses through the track_course pivot.
+     */
+    public function trackCourses(): HasMany
     {
-        return $this->hasMany(ProductTrackCourse::class, 'track_id', 'track_id')
-            ->where('product_id', $this->product_id)
+        return $this->hasMany(TrackCourse::class, 'track_id', 'track_id')
             ->orderBy('position');
     }
 }

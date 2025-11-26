@@ -226,19 +226,19 @@
 | created_at | timestamp |  |
 | updated_at | timestamp |  |
 
-### product_track_course
+### product_course
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | bigint | Primary key |
-| product_id | foreignId | References `products.id`, indexed with `position` |
-| track_id | foreignId | References `tracks.id` |
-| course_id | foreignId | References `courses.id` |
+| product_id | foreignId | References `products.id`, unique with `course_id`, indexed with `position` |
+| course_id | foreignId | References `courses.id`, unique with `product_id` |
 | position | integer |  |
 | visibility | enum | `visible` (default) or `hidden` |
 | created_at | timestamp |  |
 | updated_at | timestamp |  |
 
-Content hierarchy: `products → product_track → tracks → track_course → courses → modules → lessons`.
+Content hierarchy: `products → product_course → courses → modules → lessons`.
+Track hierarchy (optional): `products → product_track → tracks → track_course → courses → modules → lessons`.
 
 ### product_user
 | Column | Type | Notes |
@@ -258,7 +258,7 @@ Content hierarchy: `products → product_track → tracks → track_course → c
 | id | bigint | Primary key |
 | lesson_id | foreignId | References `lessons.id`, unique with `user_id` |
 | user_id | foreignId | References `users.id`, unique with `lesson_id` |
-| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
+| product_course_id | foreignId | Nullable, references `product_course.id` |
 | started_at | timestamp | Nullable |
 | completed_at | timestamp | Nullable |
 | created_at | timestamp |  |
@@ -270,7 +270,7 @@ Content hierarchy: `products → product_track → tracks → track_course → c
 | id | bigint | Primary key |
 | lesson_id | foreignId | References `lessons.id`, unique with `user_id` |
 | user_id | foreignId | References `users.id`, unique with `lesson_id` |
-| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
+| product_course_id | foreignId | Nullable, references `product_course.id` |
 | stars | unsignedTinyInteger | 1–5 rating |
 | comment | text | Nullable |
 | created_at | timestamp |  |
@@ -283,7 +283,7 @@ Content hierarchy: `products → product_track → tracks → track_course → c
 | lesson_id | foreignId | References `lessons.id` |
 | user_id | foreignId | References `users.id` |
 | parent_id | foreignId | Nullable self-reference to `comments.id` |
-| product_track_course_id | foreignId | Nullable, references `product_track_course.id` |
+| product_course_id | foreignId | Nullable, references `product_course.id` |
 | content | text |  |
 | status | enum | `pending` (default), `approved`, `rejected` |
 | read_at | timestamp | Nullable |

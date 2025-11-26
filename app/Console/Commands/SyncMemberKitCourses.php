@@ -7,7 +7,7 @@ use App\Models\Lesson;
 use App\Models\LessonMaterial;
 use App\Models\Module;
 use App\Models\ProductTrack;
-use App\Models\ProductTrackCourse;
+use App\Models\ProductCourse;
 use App\Models\TrackCourse;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -111,10 +111,9 @@ class SyncMemberKitCourses extends Command
                         ]
                     );
 
-                    ProductTrackCourse::updateOrCreate(
+                    ProductCourse::updateOrCreate(
                         [
                             'product_id' => $productTrack->product_id,
-                            'track_id' => $productTrack->track_id,
                             'course_id' => $courseModel->id,
                         ],
                         [

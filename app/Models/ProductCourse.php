@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductTrackCourse extends Model
+class ProductCourse extends Model
 {
     use HasFactory;
 
-    protected $table = 'product_track_course';
+    protected $table = 'product_course';
 
     protected $fillable = [
         'product_id',
-        'track_id',
         'course_id',
         'position',
         'visibility',
@@ -30,11 +29,6 @@ class ProductTrackCourse extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    public function track(): BelongsTo
-    {
-        return $this->belongsTo(Track::class);
     }
 
     public function course(): BelongsTo

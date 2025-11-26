@@ -24,7 +24,7 @@ class ClassRoom extends Page
     public Track $track;
     public Course $course;
     public Lesson $activelesson;
-    public int $product_track_course_id;
+    public int $product_course_id;
 
     #[Url]
     public $lesson_id;
@@ -43,9 +43,9 @@ class ClassRoom extends Page
         $this->track = $track;
         $this->course = $course->load([
             'modules.lessons',
-            'modules.lessons.userLessonStatus' => fn($query) => $query->where('product_track_course_id', $this->course->getProductTrackCourseId($this->product->id, $this->track->id))
+            'modules.lessons.userLessonStatus' => fn($query) => $query->where('product_course_id', $this->course->getProductCourseId($this->product->id))
         ]);
-        $this->product_track_course_id = $this->course->getProductTrackCourseId($this->product->id, $this->track->id);
+        $this->product_course_id = $this->course->getProductCourseId($this->product->id);
 
 
         $this->nextLesson($this->lesson_id);
@@ -94,13 +94,13 @@ class ClassRoom extends Page
     {
         if ($this->activelesson->userLessonStatus) {
             $this->activelesson->userLessonStatus()
-                ->where('product_track_course_id', $this->product_track_course_id)
+                ->where('product_course_id', $this->product_course_id)
                 ->update(['completed_at' => now()]);
         }
 
         $this->activelesson->userLessonStatus()->firstOrCreate([
             'user_id' => auth()->id(),
-            'product_track_course_id' => $this->product_track_course_id,
+            'product_course_id' => $this->product_course_id,
             'lesson_id' => $this->activelesson->id
         ], [
             'completed_at' => now(),
@@ -120,7 +120,7 @@ class ClassRoom extends Page
     {
         $this->activelesson->userLessonStatus()->firstOrCreate([
             'user_id' => auth()->id(),
-            'product_track_course_id' => $this->product_track_course_id,
+            'product_course_id' => $this->product_course_id,
             'lesson_id' => $this->activelesson->id
         ], [
             'started_at' => now(),

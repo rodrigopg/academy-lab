@@ -29,17 +29,31 @@ class Course extends Model
         ];
     }
 
-    public function productTracks(): BelongsToMany
+    public function productCourses(): HasMany
     {
-        return $this->belongsToMany(Track::class, 'product_track_course', 'course_id', 'track_id')
-            ->withPivot('product_id', 'position', 'visibility')
+        return $this->hasMany(ProductCourse::class);
+    }
+
+    /**
+     * Get products that have this course.
+     */
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_course')
+            ->withPivot('position', 'visibility')
             ->withTimestamps()
             ->orderByPivot('position');
     }
 
-    public function productTrackCourses(): HasMany
+    /**
+     * Get tracks that have this course.
+     */
+    public function tracks(): BelongsToMany
     {
-        return $this->hasMany(ProductTrackCourse::class);
+        return $this->belongsToMany(Track::class, 'track_course')
+            ->withPivot('position', 'visibility')
+            ->withTimestamps()
+            ->orderByPivot('position');
     }
 
     public function modules(): HasMany
@@ -47,16 +61,15 @@ class Course extends Model
         return $this->hasMany(Module::class)->orderBy('position');
     }
 
-    public function getProductTrackCourseId(int $product_id, int $track_id)
+    public function getProductCourseId(int $product_id)
     {
-        $cacheKey = sprintf('product-%d-track-%d-course-%d', $product_id, $track_id, $this->id);
+        $cacheKey = sprintf('product-%d-course-%d', $product_id, $this->id);
 
-        return Cache::rememberForever($cacheKey, fn () => DB::table('product_track_course as ptc')
-            ->where('ptc.product_id', $product_id)
-            ->where('ptc.track_id', $track_id)
-            ->where('ptc.course_id', $this->id)
-            ->where('ptc.visibility', 'visible')
-            ->orderBy('ptc.position')
-            ->value('ptc.id'));
+        return Cache::rememberForever($cacheKey, fn () => DB::table('product_course as pc')
+            ->where('pc.product_id', $product_id)
+            ->where('pc.course_id', $this->id)
+            ->where('pc.visibility', 'visible')
+            ->orderBy('pc.position')
+            ->value('pc.id'));
     }
 }

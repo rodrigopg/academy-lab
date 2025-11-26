@@ -55,16 +55,27 @@ class Product extends Model
         return $this->hasMany(ProductTrack::class);
     }
 
-    public function productTrackCourses(): HasMany
+    public function productCourses(): HasMany
     {
-        return $this->hasMany(ProductTrackCourse::class);
+        return $this->hasMany(ProductCourse::class);
+    }
+
+    /**
+     * Get courses directly associated with this product.
+     */
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'product_course')
+            ->withPivot('position', 'visibility')
+            ->withTimestamps()
+            ->orderByPivot('position');
     }
 
     public function getTotalDurationAttribute()
     {
-        $totalSeconds = DB::table('product_track_course as ptc')
-            ->join('courses', 'ptc.course_id', '=', 'courses.id')
-            ->where('ptc.product_id', $this->id)
+        $totalSeconds = DB::table('product_course as pc')
+            ->join('courses', 'pc.course_id', '=', 'courses.id')
+            ->where('pc.product_id', $this->id)
             ->sum('courses.duration');
 
         $hours = floor($totalSeconds / 3600);
