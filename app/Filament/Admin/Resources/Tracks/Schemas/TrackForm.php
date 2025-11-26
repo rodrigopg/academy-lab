@@ -42,7 +42,7 @@ class TrackForm
                                             Repeater\TableColumn::make('Nome'),
                                         ])
                                         ->schema([
-                                            Select::make('course.name')
+                                            Select::make('course_id')
                                                 ->searchable()
                                                 ->preload()
                                                 ->relationship('course', 'name')
