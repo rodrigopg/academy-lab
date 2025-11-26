@@ -9,6 +9,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class ModulesTable
@@ -16,9 +17,15 @@ class ModulesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->groups([
+                Group::make('course.name')
+                    ->label('Curso')
+                    ->collapsible(),
+            ])
+            ->defaultGroup('course.name')
             ->columns([
-                TextColumn::make('path.name')
-                    ->searchable(),
+//                TextColumn::make('course.name')
+//                    ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('position')

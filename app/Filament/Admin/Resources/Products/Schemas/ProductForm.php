@@ -38,9 +38,9 @@ class ProductForm
                                     ->label('ID do produto na eduzz'),
                                 TextInput::make('name')
                                     ->label('Nome do produto')
-                                    ->placeholder('Nome do produto. Ex: Clã Beer And Code')
+                                    ->placeholder('Nome do produto. Ex: Formação ADVPL')
                                     ->lazy()
-                                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state)))
                                     ->required(),
                                 TextInput::make('slug')
                                     ->placeholder('Link do produto')
@@ -50,72 +50,77 @@ class ProductForm
                                     ->placeholder('Url para onde o usuario sera levado caso nao tenha o produto')
                                     ->required(),
                                 Toggle::make('featured')
-                                    ->label("Produto em destaque?"),
+                                    ->label("Produto em destaque?")
+                                    ->columnSpan(2),
                                 RichEditor::make('description')
                                     ->label('Descrição')
                                     ->columnSpanFull(),
                             ])->columns(3),
-                        Tab::make('Configuração')
+                        Tab::make('Trilhas')
                             ->hiddenOn("create")
                             ->schema([
                                 Repeater::make('productTracks')
                                     ->label('Trilhas')
                                     ->relationship('productTracks')
-                                    ->itemLabel(fn ($state): string =>
-                                        Track::query()->whereKey($state['track_id'])->value('name') ?? 'Selecione a trilha'
+                                    ->itemLabel(fn($state): string => Track::query()
+                                        ->whereKey($state['track_id'])
+                                        ->value('name') ?? 'Selecione a trilha'
                                     )
                                     ->schema([
                                         Select::make('track_id')
                                             ->relationship('track', 'name')
-                                            ->createOptionForm(fn ($schema) => TrackForm::configure($schema))
+                                            ->createOptionForm(fn($schema) => TrackForm::configure($schema))
                                             ->live()
                                             ->required()
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
-                                        Repeater::make('productTrackCourses')
-                                            ->label('Cursos')
-                                            ->relationship('productTrackCourses')
-                                            ->itemLabel(fn ($state): string =>
-                                                Course::query()->whereKey($state['course_id'])->value('name') ?? 'Selecione o curso'
-                                            )
-                                            ->table([
-                                                Repeater\TableColumn::make('Nome'),
-                                            ])
-                                            ->schema([
-                                                Select::make('course_id')
-                                                    ->searchable()
-                                                    ->preload()
-                                                    ->relationship('course', 'name')
-                                                    ->createOptionForm(fn ($schema) => CourseForm::configure($schema))
-                                                    ->live()
-                                                    ->required()
-                                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
-                                            ])
-                                            ->compact()
-                                            ->hidden(fn (Get $get) => blank($get('track_id')))
-                                            ->orderColumn('position')
-                                            ->addActionLabel('Adicionar novo Curso')
-                                            ->extraItemActions([
-                                                Action::make('configure_course')
-                                                    ->icon(Heroicon::OutlinedLink)
-                                                    ->action(function (array $arguments, Repeater $component) {
-                                                        if (str_contains($arguments['item'], 'record')) {
-                                                            $state = $component->getState();
-                                                            $state = $state[$arguments['item']];
-                                                            return redirect()->route('filament.admin.resources.courses.edit', $state['course_id']);
-                                                        }
-                                                    })
-                                            ])
                                     ])
-                                    ->reorderable('position')
+                                    ->orderColumn('position')
+                                    ->reorderable()
                                     ->collapsible()
-                                    ->collapsed()
+//                                    ->collapsed()
                                     ->columnSpanFull()
                                     ->defaultItems(1)
-                                    ->addActionLabel('Adicionar nova trilha')
-
+                                    ->addActionLabel('Adicionar nova trilha'),
                             ])->columns(3),
-                    ])
-
+                        Tab::make('Cursos')
+                            ->hiddenOn("create")
+                            ->schema([
+                                Repeater::make('productCourses')
+                                    ->label('Cursos')
+                                    ->relationship('productCourses')
+                                    ->itemLabel(fn($state): string => Course::query()->whereKey($state['course_id'])->value('name') ?? 'Selecione o curso'
+                                    )
+                                    ->table([
+                                        Repeater\TableColumn::make('Nome'),
+                                    ])
+                                    ->schema([
+                                        Select::make('course_id')
+                                            ->searchable()
+                                            ->preload()
+                                            ->relationship('course', 'name')
+                                            ->createOptionForm(fn($schema) => CourseForm::configure($schema))
+                                            ->live()
+                                            ->required()
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                                    ])
+                                    ->compact()
+                                    ->hidden(fn(Get $get) => blank($get('track_id')))
+                                    ->orderColumn('position')
+                                    ->addActionLabel('Adicionar novo Curso')
+//                                            ->extraItemActions([
+//                                                Action::make('configure_course')
+//                                                    ->icon(Heroicon::OutlinedLink)
+//                                                    ->action(function (array $arguments, Repeater $component) {
+//                                                        if (str_contains($arguments['item'], 'record')) {
+//                                                            $state = $component->getState();
+//                                                            $state = $state[$arguments['item']];
+//                                                            return redirect()->route('filament.admin.resources.courses.edit', $state['course_id']);
+//                                                        }
+//                                                    })
+//                                            ])
+                            ])
+                    ])->columns(3),
+            ])
             ])->columns(1);
     }
 }

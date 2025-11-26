@@ -10,12 +10,19 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Grouping\Group;
 
 class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->groups([
+                Group::make('role.name')
+                    ->label('Role')
+                    ->collapsible()
+            ])
+            ->defaultGroup('role.name')
             ->columns([
                 TextColumn::make('role.name')
                     ->label('Papel')

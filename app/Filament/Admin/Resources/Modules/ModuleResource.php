@@ -21,7 +21,7 @@ class ModuleResource extends Resource
 {
     protected static ?string $model = Module::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $modelLabel = "Modulo";

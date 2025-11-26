@@ -19,7 +19,7 @@ class LessonResource extends Resource
 {
     protected static ?string $model = Lesson::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedVideoCamera;
 
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $modelLabel = "Aula";

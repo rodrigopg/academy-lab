@@ -21,10 +21,10 @@ class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $modelLabel = "Course";
+    protected static ?string $modelLabel = "curso";
     protected static string | \UnitEnum | null $navigationGroup = "Produto";
     protected static ?int $navigationSort = 1;
 
