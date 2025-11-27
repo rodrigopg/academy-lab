@@ -39,8 +39,12 @@ class MyProducts extends Page
                 'users' => function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 },
-                'productCourses.course.modules.lessons',
-                'productTracks.track.trackCourses.course.modules.lessons',
+                'productCourses.course.modules.lessons.lessonStatuses' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
+                'productTracks.track.trackCourses.course.modules.lessons.lessonStatuses' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
             ])
             ->when($this->search, function (Builder $query) {
                 $query->where(function (Builder $q) {
@@ -101,14 +105,13 @@ class MyProducts extends Page
                     $totalDuration += $lesson->duration ?? 0;
 
                     // Verificar se o usuário completou a aula
-                    $status = $lesson->statuses()
-                        ->where('user_id', $userId)
-                        ->where('product_course_id', $productCourse->id)
-                        ->first();
-
+                    $status = $lesson->lessonStatuses
+                    ->where('product_course_id', $productCourse->id)
+                    ->first();
+                    
                     if ($status && $status->completed_at) {
                         $completedLessons++;
-                        $watchedDuration += $lesson->duration ?? 0;
+                    $watchedDuration += $lesson->duration ?? 0;
                     }
                 }
             }
@@ -131,14 +134,13 @@ class MyProducts extends Page
                             ->where('course_id', $course->id)
                             ->value('id');
 
-                        $status = $lesson->statuses()
-                            ->where('user_id', $userId)
-                            ->where('product_course_id', $productCourseId)
-                            ->first();
-
+                        $status = $lesson->lessonStatuses
+                        ->where('product_course_id', $productCourseId)
+                        ->first();
+                        
                         if ($status && $status->completed_at) {
                             $completedLessons++;
-                            $watchedDuration += $lesson->duration ?? 0;
+                        $watchedDuration += $lesson->duration ?? 0;
                         }
                     }
                 }
