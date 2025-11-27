@@ -20,7 +20,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
                         </svg>
-                        <span>{{ $track->productTrackCourses->count() }} Cursos</span>
+                        <span>{{ $track->trackCourses->count() }} Cursos</span>
                     </div>
                     <span class="h-3 w-px bg-neutral-700"></span>
                     <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
 
-                        <span class="text-xs">{{ \Carbon\CarbonInterval::seconds($track->productTrackCourses->sum('course.duration'))->cascade()->forHumans() }}</span>
+                        <span class="text-xs">{{ \Carbon\CarbonInterval::seconds($track->trackCourses->sum('course.duration'))->cascade()->forHumans() }}</span>
                     </div>
                 </div>
 

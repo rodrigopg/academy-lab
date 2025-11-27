@@ -16,9 +16,10 @@ class LessonsTable
         return $table
             ->groups([
                 Group::make('module.name')
-                ->label('')
+                ->label('Módulo')
                 ->collapsible()
             ])
+            ->defaultGroup('module.name')
             ->columns([
                 TextColumn::make('module.name')
                     ->searchable()

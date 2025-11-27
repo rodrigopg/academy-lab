@@ -18,7 +18,6 @@ class Track extends Model
     ];
 
 
-
     /**
      * Get the products that include this track.
      */

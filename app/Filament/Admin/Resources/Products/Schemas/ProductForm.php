@@ -74,6 +74,14 @@ class ProductForm
                                             ->required()
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
                                     ])
+                                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                                        $data['position'] = $data['position'] ?? 0;
+                                        return $data;
+                                    })
+                                    ->mutateRelationshipDataBeforeSaveUsing(function (array $data): array {
+                                        $data['position'] = $data['position'] ?? 0;
+                                        return $data;
+                                    })
                                     ->orderColumn('position')
                                     ->reorderable()
                                     ->collapsible()
@@ -88,11 +96,10 @@ class ProductForm
                                 Repeater::make('productCourses')
                                     ->label('Cursos')
                                     ->relationship('productCourses')
-                                    ->itemLabel(fn($state): string => Course::query()->whereKey($state['course_id'])->value('name') ?? 'Selecione o curso'
+                                    ->itemLabel(fn($state): string => Course::query()
+                                        ->whereKey($state['course_id'])
+                                        ->value('name') ?? 'Selecione o curso'
                                     )
-                                    ->table([
-                                        Repeater\TableColumn::make('Nome'),
-                                    ])
                                     ->schema([
                                         Select::make('course_id')
                                             ->searchable()
@@ -103,21 +110,22 @@ class ProductForm
                                             ->required()
                                             ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
                                     ])
-                                    ->compact()
-                                    ->hidden(fn(Get $get) => blank($get('track_id')))
+                                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                                        $data['position'] = $data['position'] ?? 0;
+                                        $data['visibility'] = $data['visibility'] ?? 'visible';
+                                        return $data;
+                                    })
+                                    ->mutateRelationshipDataBeforeSaveUsing(function (array $data): array {
+                                        $data['position'] = $data['position'] ?? 0;
+                                        $data['visibility'] = $data['visibility'] ?? 'visible';
+                                        return $data;
+                                    })
                                     ->orderColumn('position')
-                                    ->addActionLabel('Adicionar novo Curso')
-//                                            ->extraItemActions([
-//                                                Action::make('configure_course')
-//                                                    ->icon(Heroicon::OutlinedLink)
-//                                                    ->action(function (array $arguments, Repeater $component) {
-//                                                        if (str_contains($arguments['item'], 'record')) {
-//                                                            $state = $component->getState();
-//                                                            $state = $state[$arguments['item']];
-//                                                            return redirect()->route('filament.admin.resources.courses.edit', $state['course_id']);
-//                                                        }
-//                                                    })
-//                                            ])
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->columnSpanFull()
+                                    ->defaultItems(0)
+                                    ->addActionLabel('Adicionar novo Curso'),
                             ])->columns(1),
                     ])
             ])->columns(1);

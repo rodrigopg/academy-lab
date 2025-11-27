@@ -27,8 +27,10 @@ class ProductTrack extends Page
         $this->product = $product->load([
             'productTracks' => fn ($q) => $q->orderBy('position'),
             'productTracks.track',
-            'productTracks.productTrackCourses' => fn ($q) => $q->orderBy('position'),
-            'productTracks.productTrackCourses.course'
+            'productTracks.trackCourses',
+            'productTracks.trackCourses.course',
+            'productCourses' => fn ($q) => $q->orderBy('position'),
+            'productCourses.course'
         ]);
     }
 

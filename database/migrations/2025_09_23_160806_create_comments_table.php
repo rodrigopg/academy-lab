@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('lesson_id')->constrained('lessons');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('parent_id')->nullable()->constrained('comments');
-            $table->foreignId('product_track_course_id')->nullable()->constrained('product_track_course');
+            $table->foreignId('product_course_id')->nullable()->constrained('product_course');
             $table->text('content');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamp('read_at')->nullable();

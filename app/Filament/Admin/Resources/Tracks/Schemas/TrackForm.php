@@ -36,6 +36,7 @@ class TrackForm
                                     Repeater::make('trackCourses')
                                         ->label('Cursos')
                                         ->relationship('trackCourses')
+                                        ->orderColumn('position')
                                         ->itemLabel(fn($state): string => Course::query()->whereKey($state['course_id'])->value('name') ?? 'Selecione o curso'
                                         )
                                         ->table([
